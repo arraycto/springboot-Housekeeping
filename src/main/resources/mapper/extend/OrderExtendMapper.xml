@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.jz.dao.extend.OrderExtendMapper">
+    <select resultMap="CommentResultMap" id="findAllComment">
+    select
+      c.id as co_id,
+      c.score,
+      c.content,
+      c.comment_time
+      from jz_order o left join  jz_comment c
+      on c.order_id=o.id and c.user_id = o.customer_id
+       and o.id=#{id}
+</select>
+    <resultMap id="CommentResultMap" type="com.briup.jz.bean.extend.OrderExtend">
+       <association property="comment" javaType="com.briup.jz.bean.Comment">
+            <id column="co_id" property="id"/>
+            <result column="score" property="score"/>
+            <result column="content" property="content"/>
+            <result column="comment_time" property="commentTime"/>
+        </association>
+    </resultMap>
+
+    <select resultMap="BaseResultMap1" id="findAllAddress">
+    select
+      ad.id as ad_id,
+      ad.province,
+      ad.city,
+      ad.area,
+      ad.address,
+      ad.telephone
+      from ej_order o left join  jz_address ad
+      on o.address_id=ad.id and o.id=#{id}
+</select>
+    <resultMap id="BaseResultMap1" type="com.briup.jz.bean.extend.OrderExtend">
+<!--        <association property="address" javaType="com.briup.apps.ej.bean.Address">-->
+<!--            <id column="ad_id" property="id"/>-->
+<!--            <result column="province" property="province"/>-->
+<!--            <result column="city" property="city"/>-->
+<!--            <result column="area" property="area"/>-->
+<!--            <result column="address" property="address"/>-->
+<!--            <result column="telephone" property="telephone"/>-->
+<!--        </association>-->
+    </resultMap>
+    <select resultMap="BaseResultMap2" id="findAllCustomer">
+    select
+        u.id as u_id,
+      u.telephone,
+      u.realname,
+      u.status,
+      u.user_face
+      from jz_order o left join  base_user u
+      on o.customer_id=u.id and o.id=#{id}
+</select>
+    <resultMap id="BaseResultMap2" type="com.briup.jz.bean.extend.OrderExtend">
+        <association property="customer" javaType="com.briup.jz.bean.User">
+            <id column="cu_id" property="id"/>
+            <result column="telephone" property="telephone"/>
+            <result column="realname" property="realname"/>
+            <result column="status" property="status"/>
+            <result column="user_face" property="userFace"/>
+        </association>
+    </resultMap>
+
+
+
+
+    <resultMap id="orderExtendResultMap" type="com.briup.jz.bean.extend.OrderExtend">
+        <id column="o_id" jdbcType="BIGINT" property="id"/>
+        <result column="order_time" jdbcType="DOUBLE"  property="orderTime"/>
+        <result column="total" jdbcType="DOUBLE" property="total"/>
+        <result column="status" property="status"/>
+        <result column="customer_id" jdbcType="BIGINT" property="customerId"/>
+        <result column="employee_id" jdbcType="BIGINT" property="employeeId"/>
+        <result column="address_id" jdbcType="BIGINT" property="addressId"/>
+        <association property="customer"
+                     column="customer_id"
+                     select="com.briup.jz.dao.UserMapper.selectByPrimaryKey"/>
+        <association property="employee"
+                     column="employee_id"
+                     select="com.briup.jz.dao.UserMapper.selectByPrimaryKey"/>
+        <association property="address" javaType="com.briup.jz.bean.Address">
+            <id column="a_id" jdbcType="BIGINT" property="id"/>
+            <result column="province" jdbcType="VARCHAR" property="province"/>
+            <result column="city" jdbcType="VARCHAR" property="city"/>
+            <result column="area" jdbcType="VARCHAR" property="area"/>
+            <result column="address" jdbcType="VARCHAR" property="address"/>
+            <result column="telephone" jdbcType="VARCHAR" property="telephone"/>
+            <result column="username" jdbcType="VARCHAR" property="username"/>
+        </association>
+        <association property="orderLines" column="o_id" select="com.briup.jz.dao.extend.OrderLineExtendMapper.selectByOrderId"></association>
+    </resultMap>
+
+    <select id="query" resultMap="orderExtendResultMap">
+         SELECT
+        o.id as o_id,
+        o.order_time,
+        o.status,
+        o.total,
+        o.customer_id,
+        o.employee_id,
+        o.address_id,
+        c.id as c_id,
+        c.realname as c_realname,
+        c.telephone as c_telephone,
+        e.id as e_id,
+        e.realname as e_realname,
+        e.telephone as e_telephone,
+        a.id as a_id,
+        a.province,
+        a.city,
+        a.area,
+        a.address,
+        a.username,
+        a.telephone
+    FROM
+        jz_order o
+        LEFT JOIN base_user c
+        ON o.customer_id = c.id
+        LEFT JOIN base_user e
+        ON o.employee_id = e.id
+        LEFT JOIN jz_address a
+        ON o.address_id = a.id
+   <where>
+       <if  test="status != null">
+           o.status LIKE concat ("%",#{status},"%")
+       </if>
+       <if  test="id != null">
+           o.id = #{id}
+       </if>
+   </where>
+    </select>
+
+    <select id="findOrderByUserId" resultMap="orderExtendResultMap">
+        SELECT
+        o.id as o_id,
+        o.order_time,
+        o.status,
+        o.total,
+        o.customer_id,
+        o.employee_id,
+        o.address_id,
+        c.id as c_id,
+        c.realname as c_realname,
+        c.telephone as c_telephone,
+        e.id as e_id,
+        e.realname as e_realname,
+        e.telephone as e_telephone,
+        a.id as a_id,
+        a.province,
+        a.city,
+        a.area,
+        a.address,
+        a.username,
+        a.telephone
+        FROM
+        jz_order o
+        LEFT JOIN base_user c
+        ON o.customer_id = c.id
+        LEFT JOIN base_user e
+        ON o.employee_id = e.id
+        LEFT JOIN jz_address a
+        ON o.address_id = a.id
+        <where>
+
+
+                c.id = #{id}
+
+        </where>
+    </select>
+
+
+</mapper>

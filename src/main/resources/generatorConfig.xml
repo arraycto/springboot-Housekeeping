@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<!-- mybatis-generator的核心配置文件 -->
+<generatorConfiguration>
+
+	<!--<classPathEntry location="D:\gg\repository\mysql\mysql-connector-java\8.0.16\mysql-connector-java-8.0.16.jar" 
+		/> -->
+	<classPathEntry
+		location="F:\Maven\apache-maven-3.6.1\repository\mysql\mysql-connector-java\8.0.20\mysql-connector-java-8.0.20.jar" />
+	<context id="DB2Tables" targetRuntime="MyBatis3">
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+		<jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+			connectionURL="jdbc:mysql://101.200.239.163:3306/jz_zzqg" userId="root"
+			password="Ntj@13">
+			<!--产生selectByPrimaryKey -->
+			<property name="useInformationSchema" value="true" />
+		</jdbcConnection>
+
+
+		<!--指定生成的类型为java类型，避免数据库中number等类型字段 -->
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!--自动生成的实体的存放包路径 pojo -->
+		<javaModelGenerator
+			targetPackage="com.briup.jz.bean" targetProject="./src/main/java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<!--自动生成的*Mapper.xml文件存放路径 -->
+		<sqlMapGenerator targetPackage="mapper"
+			targetProject="./src/main/resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<!--自动生成的*Mapper.java存放路径 -->
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="com.briup.jz.dao" targetProject="./src/main/java">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+
+
+		<!-- 映射配置 -->
+		<table tableName="jz_product" domainObjectName="Product">
+			<columnOverride column="introduce" javaType="java.lang.String" jdbcType="VARCHAR" />
+		</table>
+		<table tableName="jz_category" domainObjectName="Category"></table>
+		<table tableName="jz_order" domainObjectName="Order"></table>
+		<table tableName="jz_order_line" domainObjectName="OrderLine"></table>
+		<table tableName="jz_comment" domainObjectName="Comment"></table>
+		<table tableName="jz_address" domainObjectName="Address"></table>
+		<table tableName="jz_account_customer" domainObjectName="AccountCustomer"></table>
+		<table tableName="jz_account_employee" domainObjectName="AccountEmployee"></table>
+		<table tableName="jz_account_system" domainObjectName="AccountSystem"></table>
+		<table tableName="base_user" domainObjectName="User"></table>
+		<table tableName="base_role" domainObjectName="Role"></table>
+		<table tableName="base_privilege" domainObjectName="Privilege"></table>
+		<table tableName="base_role_privilege" domainObjectName="RolePrivilege"></table>
+
+
+
+		<!-- mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate -->
+
+
+
+
+	</context>
+</generatorConfiguration>

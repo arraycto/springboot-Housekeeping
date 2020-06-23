@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.jz.dao.extend.AccountCustomerExtendMapper">
+    <select  resultMap="BaseResultMap" id="findMyAddress" >
+        select
+          ad.id as ad_id,
+          ad.province,
+          ad.city,
+          ad.area,
+          ad.address
+          from jz_account_customer cu left join  jz_address ad
+          on cu.user_id=ad.user_id and cu.id=#{id}
+
+</select>
+    <resultMap id="BaseResultMap" type="com.briup.jz.bean.extend.AccountCustomerExtend" >
+        <association property="address" javaType="com.briup.jz.bean.Address" >
+            <id column="id" property="id"/>
+            <result column="province" property="province" />
+            <result column="city" property="city"/>
+            <result column="area" property="area"/>
+            <result column="address" property="address"/>
+        </association>
+    </resultMap>
+    <select  resultMap="BaseResultMap1" id="findMyMessage" >
+    select
+        u.id as u_id,
+            u.telephone,
+            u.realname,
+            u.status
+     from jz_account_customer cu left join  base_user u on cu.user_id=u.id where cu.id=#{id}
+</select>
+    <resultMap id="BaseResultMap1" type="com.briup.jz.bean.User">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+        <result column="realname" jdbcType="VARCHAR" property="realname" />
+        <result column="status" jdbcType="VARCHAR" property="status" />
+
+    </resultMap>
+    <select  resultMap="BaseResultMap2" id="findMyOrder" >
+    select
+      o.id as o_id,
+      o.order_time,
+      o.total,
+      o.status,
+      o.customer_id,
+      o.address_id
+      from jz_order o ,  jz_account_customer cu
+      where o.customer_id=cu.id and cu.id=#{id}
+</select>
+    <resultMap id="BaseResultMap2" type="com.briup.jz.bean.Order">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="order_time" jdbcType="BIGINT" property="orderTime"/>
+        <result column="total" jdbcType="DOUBLE" property="total"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="customer_id" jdbcType="BIGINT" property="customerId"/>
+        <result column="employee_id" jdbcType="BIGINT" property="employeeId"/>
+        <result column="address_id" jdbcType="BIGINT" property="addressId"/>
+    </resultMap>
+
+</mapper>
